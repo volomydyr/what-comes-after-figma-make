@@ -1,0 +1,1345 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>What comes after Figma Make</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root {
+  --accent: #d4915e;
+  --accent-text: #b07340;
+  --ease-out-expo: cubic-bezier(0.22, 1, 0.36, 1);
+  --duration-in: 0.55s;
+  --duration-out: 0.35s;
+  --stagger: 0.09s;
+}
+
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+html, body {
+  width: 100%; height: 100%;
+  overflow: hidden;
+  background: #1a1a1a;
+  font-family: 'Montserrat', sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+.deck {
+  position: fixed;
+  top: 0; left: 0;
+  width: 1920px; height: 1080px;
+  transform-origin: 0 0;
+}
+
+/* =========================================
+   SLIDES — base
+   ========================================= */
+.slide {
+  position: absolute;
+  top: 0; left: 0;
+  width: 1920px; height: 1080px;
+  overflow: hidden;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.45s ease;
+}
+.slide.active {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/* =========================================
+   ENTRANCE ANIMATIONS
+   ========================================= */
+.slide.active .a {
+  animation: up var(--duration-in) var(--ease-out-expo) both;
+}
+
+/* 5 · Stagger: 90ms breathing room between elements */
+.slide.active .d1 { animation-delay: calc(var(--stagger) * 1); }
+.slide.active .d2 { animation-delay: calc(var(--stagger) * 2); }
+.slide.active .d3 { animation-delay: calc(var(--stagger) * 3); }
+.slide.active .d4 { animation-delay: calc(var(--stagger) * 4); }
+.slide.active .d5 { animation-delay: calc(var(--stagger) * 5); }
+.slide.active .d6 { animation-delay: calc(var(--stagger) * 6); }
+.slide.active .d7 { animation-delay: calc(var(--stagger) * 7); }
+.slide.active .d8 { animation-delay: calc(var(--stagger) * 8); }
+
+/* Default: fade + rise */
+@keyframes up {
+  from { opacity: 0; transform: translateY(20px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* 1 · Grand scale entrance — title (1) & closing (26) */
+@keyframes scaleIn {
+  from { opacity: 0; transform: scale(0.96); }
+  to   { opacity: 1; transform: scale(1); }
+}
+
+/* 1 · Dramatic blur reveal — section openers (4, 10, 15) */
+@keyframes blurIn {
+  from { opacity: 0; filter: blur(5px); transform: translateY(6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* 1 · Lateral slide — comparison columns (16, 17, 19, 21) */
+@keyframes slideLeft {
+  from { opacity: 0; transform: translateX(40px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+
+/* 1 · data-anim overrides (higher specificity, no !important) */
+.slide[data-anim="scaleIn"].active .a  { animation-name: scaleIn; }
+.slide[data-anim="blurIn"].active .a   { animation-name: blurIn; }
+.slide[data-anim="slideLeft"].active .a { animation-name: slideLeft; }
+
+/* =========================================
+   2 · DIRECTION-AWARE EXIT
+   ========================================= */
+@keyframes exitUp {
+  from { opacity: 1; transform: translateY(0); }
+  to   { opacity: 0; transform: translateY(-20px); }
+}
+@keyframes exitDown {
+  from { opacity: 1; transform: translateY(0); }
+  to   { opacity: 0; transform: translateY(20px); }
+}
+
+.slide.exit-fwd .a {
+  animation: exitUp var(--duration-out) var(--ease-out-expo) both;
+}
+.slide.exit-bwd .a {
+  animation: exitDown var(--duration-out) var(--ease-out-expo) both;
+}
+
+/* =========================================
+   4 · AMBIENT FLOAT — section openers
+   ========================================= */
+@keyframes ambientFloat {
+  0%, 100% { transform: translateY(0); }
+  50%      { transform: translateY(-6px); }
+}
+.ambient-float {
+  animation: ambientFloat 4s ease-in-out infinite !important;
+}
+.slide.active .float-always {
+  animation: ambientFloat 5s ease-in-out infinite !important;
+}
+@keyframes ambientFloatReverse {
+  0%, 100% { transform: translateY(0); }
+  50%      { transform: translateY(6px); }
+}
+.slide.active .float-always-reverse {
+  animation: ambientFloatReverse 5s ease-in-out infinite !important;
+}
+@keyframes scrollUp {
+  from { transform: translateY(0); }
+  to   { transform: translateY(-2016px); }
+}
+.slide.active .article-scroll {
+  animation: scrollUp 18s linear infinite !important;
+}
+@keyframes cardDrift {
+  0%, 100% { transform: translateY(0); }
+  50%      { transform: translateY(-8px); }
+}
+.slide.active .card-drift-1 { animation: cardDrift 16s ease-in-out infinite; }
+.slide.active .card-drift-2 { animation: cardDrift 20s ease-in-out infinite; }
+.slide.active .card-drift-3 { animation: cardDrift 24s ease-in-out infinite; }
+
+/* =========================================
+   3 · SVG UNDERLINE DRAW-IN — slide 26
+   ========================================= */
+.draw-in path {
+  stroke-dasharray: 800;
+  stroke-dashoffset: 800;
+}
+.slide.active .draw-in path {
+  animation: drawStroke 1.2s ease 0.8s forwards;
+}
+@keyframes drawStroke {
+  to { stroke-dashoffset: 0; }
+}
+
+/* =========================================
+   BACKGROUNDS
+   ========================================= */
+.bg-dark  { background: #302b28; }
+.bg-light { background: #f6f6f6; }
+.bg-white { background: #ffffff; }
+.bg-deep  { background: #272727; }
+
+/* =========================================
+   6 · ANIMATED NOISE / GRAIN on dark surfaces
+   SVG tile rasterized once, then GPU-drifted via transform.
+   Oversized by 30px to allow seamless drift movement.
+   ========================================= */
+/* Noise canvas overlaid via JS — no CSS pseudo-element needed */
+
+/* =========================================
+   AMBIENT GLOW ORBS on dark surfaces
+   Blurred, slowly drifting warm gradient.
+   Filter is static (cached), only transform animates (GPU).
+   ========================================= */
+@keyframes orbDrift {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  20%  { transform: translate(50px, -40px) scale(1.05); }
+  40%  { transform: translate(-30px, 25px) scale(0.97); }
+  60%  { transform: translate(35px, 50px) scale(1.03); }
+  80%  { transform: translate(-45px, -20px) scale(0.98); }
+}
+.bg-dark::after,
+.bg-deep::after {
+  content: '';
+  position: absolute;
+  inset: -120px;
+  pointer-events: none;
+  background: radial-gradient(ellipse 60% 50% at 75% 80%, rgba(0, 0, 0, 0.18) 0%, transparent 65%);
+  filter: blur(80px);
+  animation: orbDrift 14s ease-in-out infinite;
+}
+
+/* =========================================
+   FLOATING WHITE CARD (title slide motif)
+   ========================================= */
+.card-wrap {
+  position: absolute;
+  top: 60px; left: 60px; right: 60px; bottom: 60px;
+  background: #fff;
+  border-radius: 24px;
+  padding: 80px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  box-shadow:
+    0 5px 8px rgba(180, 120, 60, 0.04),
+    0 12px 40px rgba(180, 120, 60, 0.07),
+    0 26px 80px rgba(180, 120, 60, 0.10);
+}
+
+/* INNER PADDING for non-card slides */
+.pad {
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  padding: 80px;
+}
+
+/* PLACEHOLDER */
+.ph {
+  border: none;
+  border-radius: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  gap: 12px;
+  font-size: 22px;
+  font-weight: 600;
+  color: rgba(0,0,0,0.25);
+  background: rgba(0,0,0,0.06);
+}
+.ph.on-dark {
+  color: rgba(255,255,255,0.3);
+  background: rgba(255,255,255,0.06);
+}
+.ph svg {
+  width: 44px; height: 44px; opacity: 0.35;
+}
+.ph.on-dark svg { fill: #fff; }
+.ph.vid svg { width: 56px; height: 56px; }
+
+/* QR placeholder */
+.qr {
+  width: 160px; height: 160px;
+  border: none;
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  font-weight: 700;
+  color: rgba(0,0,0,0.2);
+  background: rgba(0,0,0,0.06);
+  flex-shrink: 0;
+}
+.qr.on-dark {
+  color: rgba(255,255,255,0.25);
+  background: rgba(255,255,255,0.06);
+}
+
+/* =========================================
+   SLIDE 5 — chat input animations
+   ========================================= */
+@keyframes chipIn {
+  from { opacity: 0; transform: translateY(6px) scale(0.98); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+.chat-chip { opacity: 0; }
+.slide.active .chat-chip {
+  animation: chipIn 0.5s var(--ease-out-expo) both;
+}
+.slide.active .chat-chip:nth-child(1) { animation-delay: 2.9s; }
+.slide.active .chat-chip:nth-child(2) { animation-delay: 3.04s; }
+.slide.active .chat-chip:nth-child(3) { animation-delay: 3.18s; }
+.slide.active .chat-chip:nth-child(4) { animation-delay: 3.32s; }
+.chat-chip-jira { opacity: 0; }
+.slide.active .chat-chip-jira {
+  animation: chipIn 0.5s var(--ease-out-expo) 3.5s both;
+}
+
+/* Indicator icons */
+@keyframes indicatorPop {
+  0%   { opacity: 0; transform: scale(0.4) rotate(-12deg); }
+  65%  { opacity: 1; transform: scale(1.05) rotate(3deg); }
+  100% { opacity: 1; transform: scale(1) rotate(0deg); }
+}
+@keyframes gentleBob {
+  0%, 100% { transform: translateY(0); }
+  50%      { transform: translateY(-4px); }
+}
+.indicator-bad, .indicator-good { opacity: 0; }
+.slide.active .indicator-bad,
+.slide.active .indicator-good {
+  animation: indicatorPop 0.6s var(--ease-out-expo) both;
+  animation-play-state: paused;
+}
+.slide.active .indicators-go .indicator-bad {
+  animation-play-state: running;
+}
+.slide.active .indicators-go .indicator-good {
+  animation-delay: 0.5s;
+  animation-play-state: running;
+}
+.slide5-good {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.7s var(--ease-out-expo), transform 0.7s var(--ease-out-expo);
+}
+.slide5-good.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+.slide.active .indicator-bad.settled,
+.slide.active .indicator-good.settled {
+  animation: gentleBob 3s ease-in-out infinite;
+  opacity: 1;
+}
+
+/* Chat conversation elements (shared across slides 7-9) */
+.conv-el {
+  opacity: 0;
+  transform: translateY(12px);
+  transition: opacity 0.6s var(--ease-out-expo), transform 0.6s var(--ease-out-expo);
+}
+.conv-el.visible { opacity: 1; transform: translateY(0); }
+.conv-el.hidden { opacity: 0; transform: translateY(-4px); transition-duration: 0.2s; pointer-events: none; }
+.conv-el.collapsed { display: none; }
+/* Cursor pointer */
+.s7-cursor {
+  position: absolute;
+  width: 24px; height: 24px;
+  opacity: 0;
+  z-index: 10;
+  transition: top 0.5s var(--ease-out-expo), left 0.5s var(--ease-out-expo), opacity 0.25s ease;
+  pointer-events: none;
+}
+.s7-cursor.visible { opacity: 1; }
+/* Typing dots */
+@keyframes typingDot {
+  0%, 80%, 100% { opacity: 0.3; transform: scale(0.85); }
+  40% { opacity: 1; transform: scale(1); }
+}
+.slide.active .typing-dot {
+  width: 10px; height: 10px;
+  background: rgba(0,0,0,0.3);
+  border-radius: 50%;
+  animation: typingDot 1.2s ease-in-out infinite;
+}
+.slide.active .typing-dot:nth-child(2) { animation-delay: 0.15s; }
+.slide.active .typing-dot:nth-child(3) { animation-delay: 0.3s; }
+
+/* Shared inline style classes */
+.chat-box {
+  background:#f9f9f9;border-radius:28px;border:1px solid rgba(0,0,0,0.06);
+  padding:24px 24px 18px;display:flex;flex-direction:column;gap:18px;
+  box-shadow:0 2px 8px rgba(0,0,0,0.03),0 8px 24px rgba(0,0,0,0.04);
+}
+.chat-btn-plus {
+  width:52px;height:52px;background:#fff;border:1px solid rgba(0,0,0,0.08);
+  border-radius:14px;display:flex;align-items:center;justify-content:center;
+  box-shadow:0 1px 3px rgba(0,0,0,0.06);
+}
+.chat-btn-send {
+  width:52px;height:52px;background:#282828;border-radius:14px;
+  display:flex;align-items:center;justify-content:center;
+}
+.bubble-user {
+  background:rgba(0,0,0,0.06);border-radius:22px 22px 6px 22px;padding:20px 24px;
+}
+.bubble-ai {
+  background:rgba(0,0,0,0.06);border-radius:22px 22px 22px 6px;padding:20px 24px;
+}
+.typing-dots-wrap {
+  background:rgba(0,0,0,0.06);border-radius:22px 22px 22px 6px;padding:18px 24px;display:flex;gap:6px;
+}
+.chat-footer {
+  display:flex;align-items:center;justify-content:space-between;
+}
+.pill-label {
+  display:inline-block;border-radius:20px;padding:6px 18px;margin-bottom:12px;
+}
+.pill-label span {
+  font-size:15px;font-weight:700;color:#fff;text-transform:uppercase;letter-spacing:1px;
+}
+.rule-left {
+  flex:0.5;display:flex;flex-direction:column;gap:24px;
+}
+.rule-label {
+  font-size:28px;font-weight:700;color:var(--accent-text);
+}
+.rule-title {
+  font-size:64px;font-weight:800;color:#282828;line-height:1.1;
+}
+.conv-column {
+  flex:1;display:flex;flex-direction:column;gap:24px;position:relative;margin-top:64px;
+}
+
+/* Slide videos — pause/play on click */
+.video-wrap {
+  position: relative; cursor: pointer;
+}
+.video-wrap::after {
+  content: '';
+  position: absolute; inset: 0;
+  background: rgba(0,0,0,0);
+  border-radius: 24px;
+  transition: background 0.2s ease;
+  pointer-events: none;
+}
+.video-wrap:hover::after {
+  background: rgba(0,0,0,0.06);
+}
+.video-wrap .video-pause-icon {
+  position: absolute; top: 50%; left: 50%;
+  transform: translate(-50%,-50%) scale(0.8);
+  opacity: 0;
+  width: 80px; height: 80px;
+  background: rgba(0,0,0,0.5);
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  transition: opacity 0.2s ease, transform 0.2s ease;
+  z-index: 2;
+  pointer-events: none;
+}
+.video-wrap.paused .video-pause-icon {
+  opacity: 1; transform: translate(-50%,-50%) scale(1);
+}
+
+.typing-cursor {
+  display: inline-block;
+  width: 2px;
+  height: 1.1em;
+  background: #282828;
+  margin-left: 2px;
+  vertical-align: text-bottom;
+  animation: blink 0.7s step-end infinite;
+}
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+
+/* =========================================
+   8 · PROGRESS BAR (replaces counter)
+   ========================================= */
+.progress-bar {
+  position: fixed;
+  bottom: 0; left: 0; right: 0;
+  height: 3px;
+  background: rgba(255,255,255,0.06);
+  z-index: 100;
+}
+.progress-fill {
+  height: 100%;
+  width: 0;
+  background: var(--accent);
+  transition: width 0.45s var(--ease-out-expo);
+}
+
+</style>
+</head>
+<body>
+
+<div class="deck" id="deck">
+
+<!-- ===== 1 — TITLE (dark + white card) ===== -->
+<div class="slide bg-dark active" data-slide="1">
+  <div class="card-wrap">
+    <div style="display:flex;justify-content:space-between;align-items:flex-start;">
+      <h1 class="a" style="font-size:140px;font-weight:800;line-height:1.05;color:#282828;max-width:1100px;letter-spacing:-2px;">What comes after Figma Make<span style="margin-left:14px;">✨</span></h1>
+      <p class="a d1" style="font-size:28px;font-weight:700;color:rgba(40,40,40,0.35);flex-shrink:0;padding-top:16px;">N-iX</p>
+    </div>
+    <div style="display:flex;justify-content:space-between;align-items:flex-end;">
+      <p class="a d2" style="font-size:44px;font-weight:800;color:#282828;">Tools every designer should know</p>
+      <p class="a d3" style="font-size:28px;font-weight:600;color:rgba(40,40,40,0.35);flex-shrink:0;">March 2026</p>
+    </div>
+  </div>
+</div>
+
+<!-- ===== 2 — ABOUT ME (light) ===== -->
+<div class="slide bg-light" data-slide="2">
+  <div class="pad" style="display:flex;gap:40px;padding:60px;">
+    <div style="flex:1.4;background:#fff;border-radius:24px;padding:80px;display:flex;flex-direction:column;justify-content:space-between;box-shadow:none;">
+      <div>
+        <h2 class="a" style="font-size:96px;font-weight:800;color:#282828;line-height:1.05;">Volodymyr Merlenko</h2>
+        <p class="a d1" style="font-size:28px;font-weight:600;color:rgba(40,40,40,0.35);margin-top:20px;">Product Designer @Cieden & Way2B1</p>
+      </div>
+
+      <div class="a d2" style="display:flex;flex-direction:column;gap:16px;">
+        <div style="display:flex;justify-content:space-between;align-items:baseline;">
+          <p style="font-size:26px;font-weight:800;color:#282828;">• LinkedIn blog</p>
+          <p style="font-size:26px;font-weight:600;color:rgba(40,40,40,0.4);">650K+ impressions</p>
+        </div>
+        <div style="display:flex;justify-content:space-between;align-items:baseline;">
+          <p style="font-size:26px;font-weight:800;color:#282828;">• DOU & Medium articles</p>
+          <p style="font-size:26px;font-weight:600;color:rgba(40,40,40,0.4);">46,000+ views</p>
+        </div>
+        <div style="display:flex;justify-content:space-between;align-items:baseline;">
+          <p style="font-size:26px;font-weight:800;color:#282828;">• Telegram community</p>
+          <p style="font-size:26px;font-weight:600;color:rgba(40,40,40,0.4);">1,100+ members</p>
+        </div>
+        <div style="display:flex;justify-content:space-between;align-items:baseline;">
+          <p style="font-size:26px;font-weight:800;color:#282828;">• Mentorship</p>
+          <p style="font-size:26px;font-weight:600;color:rgba(40,40,40,0.4);">KOLO x Mate academy</p>
+        </div>
+        <div style="display:flex;justify-content:space-between;align-items:baseline;">
+          <p style="font-size:26px;font-weight:800;color:#282828;">• Dysarium conference</p>
+          <p style="font-size:26px;font-weight:600;color:rgba(40,40,40,0.4);">2025 speaker</p>
+        </div>
+      </div>
+    </div>
+    <div class="a" style="flex:0.8;border-radius:24px;overflow:hidden;">
+      <img src="slide-2.jpg" alt="Volodymyr Merlenko" style="width:100%;height:100%;object-fit:cover;border-radius:24px;">
+    </div>
+  </div>
+</div>
+
+<!-- ===== 3 — WHAT WE'LL COVER (dark, asymmetric) ===== -->
+<div class="slide bg-dark" data-slide="3">
+  <div class="pad" style="display:flex;flex-direction:column;justify-content:space-between;">
+    <h2 class="a" style="font-size:150px;font-weight:800;color:#fff;line-height:1.05;max-width:950px;letter-spacing:-2px;">What we'll cover today</h2>
+    <div class="a d1" style="align-self:flex-end;max-width:650px;">
+      <div style="display:grid;grid-template-columns:auto 1fr;gap:14px 16px;">
+        <span style="font-size:32px;font-weight:800;color:rgba(255,255,255,0.3);">1.</span><span style="font-size:32px;font-weight:800;color:#fff;">Five universal rules</span>
+        <span style="font-size:32px;font-weight:800;color:rgba(255,255,255,0.3);">2.</span><span style="font-size:32px;font-weight:800;color:#fff;">Figma Make</span>
+        <span style="font-size:32px;font-weight:800;color:rgba(255,255,255,0.3);">3.</span><span style="font-size:32px;font-weight:800;color:#fff;">Cursor & Claude Code</span>
+        <span style="font-size:32px;font-weight:800;color:rgba(255,255,255,0.3);">4.</span><span style="font-size:32px;font-weight:800;color:#fff;">Handoff & security</span>
+        <span style="font-size:32px;font-weight:800;color:rgba(255,255,255,0.3);">5.</span><span style="font-size:32px;font-weight:800;color:#fff;">AI capabilities & resources</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== 4 — SECTION: Five rules (white, big centered) ===== -->
+<div class="slide bg-white" data-slide="4" data-anim="blurIn">
+  <div class="pad" style="display:flex;align-items:center;justify-content:center;">
+    <h1 class="a" style="font-size:130px;font-weight:800;color:#282828;text-align:center;max-width:1400px;line-height:1.08;letter-spacing:-2px;">Five rules that work in any AI tool</h1>
+  </div>
+</div>
+
+<!-- ===== 5 — RULE 1 (light, text + screenshot) ===== -->
+<div class="slide bg-light" data-slide="5">
+  <div class="pad" style="display:flex;gap:40px;">
+    <div style="flex:0.5;display:flex;flex-direction:column;gap:24px;">
+      <p class="a" style="font-size:28px;font-weight:700;color:var(--accent-text);">Rule 1</p>
+      <h2 class="a d1" style="font-size:64px;font-weight:800;color:#282828;line-height:1.1;">Provide as<br>much context<br>as possible</h2>
+    </div>
+    <div style="flex:1;display:flex;flex-direction:column;align-items:stretch;justify-content:flex-start;gap:120px;margin-top:80px;">
+      <!-- BAD example -->
+      <div class="a d2" style="position:relative;">
+        <div class="indicator-bad" style="position:absolute;top:-28px;right:-16px;z-index:1;width:68px;height:68px;background:#e74c3c;border-radius:50%;display:flex;align-items:center;justify-content:center;">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" style="width:28px;height:28px;"><line x1="7" y1="7" x2="17" y2="17"/><line x1="17" y1="7" x2="7" y2="17"/></svg>
+        </div>
+        <div style="background:#f9f9f9;border-radius:28px;border:1px solid rgba(0,0,0,0.06);padding:24px 24px 18px;display:flex;flex-direction:column;gap:18px;box-shadow:0 2px 8px rgba(0,0,0,0.03),0 8px 24px rgba(0,0,0,0.04);">
+          <p id="typing-prompt-bad" data-text="Design a notification feature" style="font-size:20px;font-weight:500;color:#282828;line-height:1.5;min-height:1.5em;"></p>
+          <div style="display:flex;align-items:center;justify-content:space-between;">
+            <div style="width:52px;height:52px;background:#fff;border:1px solid rgba(0,0,0,0.08);border-radius:14px;display:flex;align-items:center;justify-content:center;box-shadow:0 1px 3px rgba(0,0,0,0.06);">
+              <svg viewBox="0 0 24 24" fill="none" stroke="rgba(0,0,0,0.45)" stroke-width="2" stroke-linecap="round" style="width:26px;height:26px;"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            </div>
+            <div style="width:52px;height:52px;background:#282828;border-radius:14px;display:flex;align-items:center;justify-content:center;">
+              <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="width:24px;height:24px;"><path d="M12 19V5M5 12l7-7 7 7"/></svg>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- GOOD example -->
+      <div class="slide5-good" style="position:relative;">
+        <div class="indicator-good" style="position:absolute;top:-28px;right:-16px;z-index:1;width:68px;height:68px;background:#34a065;border-radius:50%;display:flex;align-items:center;justify-content:center;">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" style="width:28px;height:28px;"><path d="M6 12l4 4 8-8"/></svg>
+        </div>
+        <div style="flex:1;background:#f9f9f9;border-radius:28px;border:1px solid rgba(0,0,0,0.06);padding:24px 24px 18px;display:flex;flex-direction:column;gap:18px;box-shadow:0 2px 8px rgba(0,0,0,0.03),0 8px 24px rgba(0,0,0,0.04);">
+          <!-- Attached files -->
+          <div style="display:flex;gap:8px;flex-wrap:wrap;">
+            <div class="chat-chip" style="display:flex;align-items:center;gap:10px;background:rgba(0,0,0,0.05);border-radius:12px;padding:10px 16px;">
+              <svg viewBox="0 0 24 24" fill="rgba(40,40,40,0.4)" style="width:22px;height:22px;flex-shrink:0;"><path d="M21 19V5c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2zM8.5 13.5l2.5 3.01L14.5 12l4.5 6H5l3.5-4.5z"/></svg>
+              <span style="font-size:17px;font-weight:600;color:#282828;">Dashboard.jpg</span>
+            </div>
+            <div class="chat-chip" style="display:flex;align-items:center;gap:10px;background:rgba(0,0,0,0.05);border-radius:12px;padding:10px 16px;">
+              <svg viewBox="0 0 24 24" fill="rgba(40,40,40,0.4)" style="width:22px;height:22px;flex-shrink:0;"><path d="M21 19V5c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2zM8.5 13.5l2.5 3.01L14.5 12l4.5 6H5l3.5-4.5z"/></svg>
+              <span style="font-size:17px;font-weight:600;color:#282828;">Settings_page.jpg</span>
+            </div>
+            <div class="chat-chip" style="display:flex;align-items:center;gap:10px;background:rgba(0,0,0,0.05);border-radius:12px;padding:10px 16px;">
+              <svg viewBox="0 0 24 24" fill="rgba(40,40,40,0.4)" style="width:22px;height:22px;flex-shrink:0;"><path d="M14 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V8l-6-6zm4 18H6V4h7v5h5v11z"/></svg>
+              <span style="font-size:17px;font-weight:600;color:#282828;">Meeting_transcript.md</span>
+            </div>
+            <div class="chat-chip" style="display:flex;align-items:center;gap:10px;background:rgba(0,0,0,0.05);border-radius:12px;padding:10px 16px;">
+              <svg viewBox="0 0 24 24" fill="rgba(40,40,40,0.4)" style="width:22px;height:22px;flex-shrink:0;"><path d="M14 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V8l-6-6zm4 18H6V4h7v5h5v11z"/></svg>
+              <span style="font-size:17px;font-weight:600;color:#282828;">PRD_notifications.pdf</span>
+            </div>
+          </div>
+          <!-- Jira integration -->
+          <div style="display:flex;gap:10px;">
+            <div class="chat-chip-jira" style="display:flex;align-items:center;gap:10px;background:rgba(38,132,255,0.08);border-radius:12px;padding:10px 16px;">
+              <svg viewBox="0 0 256 256" style="width:22px;height:22px;flex-shrink:0;"><defs><linearGradient id="jb" x1="98.03%" y1="0.22%" x2="58.17%" y2="40.18%"><stop offset="18%" stop-color="#0052CC"/><stop offset="100%" stop-color="#2684FF"/></linearGradient><linearGradient id="jc" x1="100.17%" y1="0.05%" x2="55.76%" y2="44.73%"><stop offset="18%" stop-color="#0052CC"/><stop offset="100%" stop-color="#2684FF"/></linearGradient></defs><path d="M244.658 0H121.707a55.502 55.502 0 0 0 55.502 55.502h22.642V77.37c.02 30.625 24.841 55.447 55.466 55.502V10.666C255.317 4.776 250.55 0 244.658 0z" fill="#2684FF"/><path d="M183.822 61.262H60.872c.019 30.625 24.84 55.447 55.466 55.502h22.642v21.868c.02 30.597 24.798 55.408 55.395 55.502V71.928c0-5.891-4.768-10.666-10.553-10.666z" fill="url(#jb)"/><path d="M122.951 122.489H0c0 30.653 24.85 55.502 55.502 55.502h22.642v21.904c.02 30.597 24.798 55.408 55.395 55.502V133.155c0-5.891-4.768-10.666-10.588-10.666z" fill="url(#jc)"/></svg>
+              <span style="font-size:17px;font-weight:600;color:#1a5eb8;">PROJ-247: Notifications</span>
+            </div>
+          </div>
+          <!-- Message text -->
+          <p id="typing-prompt" data-text="Brainstorm 3 different approaches to improve the notification system for our dashboard. Show pros and cons for each approach." style="font-size:20px;font-weight:500;color:#282828;line-height:1.5;min-height:1.5em;"></p>
+          <!-- Footer with buttons -->
+          <div style="display:flex;align-items:center;justify-content:space-between;">
+            <div style="width:52px;height:52px;background:#fff;border:1px solid rgba(0,0,0,0.08);border-radius:14px;display:flex;align-items:center;justify-content:center;box-shadow:0 1px 3px rgba(0,0,0,0.06);">
+              <svg viewBox="0 0 24 24" fill="none" stroke="rgba(0,0,0,0.45)" stroke-width="2" stroke-linecap="round" style="width:26px;height:26px;"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            </div>
+            <div style="width:52px;height:52px;background:#282828;border-radius:14px;display:flex;align-items:center;justify-content:center;">
+              <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="width:24px;height:24px;"><path d="M12 19V5M5 12l7-7 7 7"/></svg>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== 6 — RULE 2 (light, text + screenshot) ===== -->
+<div class="slide bg-light" data-slide="6">
+  <div class="pad" style="display:flex;gap:40px;">
+    <div style="flex:0.5;display:flex;flex-direction:column;gap:24px;">
+      <p class="a" style="font-size:28px;font-weight:700;color:var(--accent-text);">Rule 2</p>
+      <h2 class="a d1" style="font-size:64px;font-weight:800;color:#282828;line-height:1.1;">Write detailed prompts</h2>
+    </div>
+    <div style="flex:1;display:flex;flex-direction:column;align-items:stretch;justify-content:flex-start;gap:48px;margin-top:40px;">
+      <!-- BAD example -->
+      <div class="a d2">
+        <div style="display:inline-block;background:#e74c3c;border-radius:20px;padding:6px 18px;margin-bottom:12px;">
+          <span style="font-size:15px;font-weight:700;color:#fff;text-transform:uppercase;letter-spacing:1px;">Too vague</span>
+        </div>
+        <div style="background:#f9f9f9;border-radius:28px;border:1px solid rgba(0,0,0,0.06);padding:24px 24px 18px;display:flex;flex-direction:column;gap:18px;box-shadow:0 2px 8px rgba(0,0,0,0.03),0 8px 24px rgba(0,0,0,0.04);">
+          <p style="font-size:20px;font-weight:500;color:#282828;line-height:1.5;">Brainstorm 3 different approaches to improve the notification system for our dashboard. Show pros and cons for each approach.</p>
+          <div style="display:flex;align-items:center;justify-content:space-between;">
+            <div style="width:52px;height:52px;background:#fff;border:1px solid rgba(0,0,0,0.08);border-radius:14px;display:flex;align-items:center;justify-content:center;box-shadow:0 1px 3px rgba(0,0,0,0.06);">
+              <svg viewBox="0 0 24 24" fill="none" stroke="rgba(0,0,0,0.45)" stroke-width="2" stroke-linecap="round" style="width:26px;height:26px;"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            </div>
+            <div style="width:52px;height:52px;background:#282828;border-radius:14px;display:flex;align-items:center;justify-content:center;">
+              <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="width:24px;height:24px;"><path d="M12 19V5M5 12l7-7 7 7"/></svg>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- GOOD example -->
+      <div class="a d6">
+        <div style="display:inline-block;background:#34a065;border-radius:20px;padding:6px 18px;margin-bottom:12px;">
+          <span style="font-size:15px;font-weight:700;color:#fff;text-transform:uppercase;letter-spacing:1px;">Good enough</span>
+        </div>
+        <div style="background:#f9f9f9;border-radius:28px;border:1px solid rgba(0,0,0,0.06);padding:24px 24px 18px;display:flex;flex-direction:column;gap:18px;box-shadow:0 2px 8px rgba(0,0,0,0.03),0 8px 24px rgba(0,0,0,0.04);">
+          <p style="font-size:20px;font-weight:500;color:#282828;line-height:1.5;">Hey, I need to rethink how notifications work in our dashboard. Right now everything looks the same – a billing warning looks identical to a critical server error, and people keep missing important stuff. Our users are IT admins managing a bunch of servers, so they need to spot urgent issues fast.<br><br>Can you brainstorm 3 different ways to fix this? For each one:<br><br><span style="font-size:24px;">•</span> should work with our current sidebar layout<br><span style="font-size:24px;">•</span> support both in-app and email notifications<br><span style="font-size:24px;">•</span> users should be able to configure which ones they get<br><br>For each idea walk me through how it would look visually, pros and cons, and if there's any possible development complexity.</p>
+          <div style="display:flex;align-items:center;justify-content:space-between;">
+            <div style="width:52px;height:52px;background:#fff;border:1px solid rgba(0,0,0,0.08);border-radius:14px;display:flex;align-items:center;justify-content:center;box-shadow:0 1px 3px rgba(0,0,0,0.06);">
+              <svg viewBox="0 0 24 24" fill="none" stroke="rgba(0,0,0,0.45)" stroke-width="2" stroke-linecap="round" style="width:26px;height:26px;"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            </div>
+            <div style="width:52px;height:52px;background:#282828;border-radius:14px;display:flex;align-items:center;justify-content:center;">
+              <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="width:24px;height:24px;"><path d="M12 19V5M5 12l7-7 7 7"/></svg>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== 7 — RULE 3 (light, text + screenshot) ===== -->
+<div class="slide bg-light" data-slide="7">
+  <div class="pad" style="display:flex;gap:40px;">
+    <div style="flex:0.5;display:flex;flex-direction:column;gap:24px;">
+      <p class="a" style="font-size:28px;font-weight:700;color:var(--accent-text);">Rule 3</p>
+      <h2 class="a d1" style="font-size:64px;font-weight:800;color:#282828;line-height:1.1;">Ask AI to ask you questions</h2>
+    </div>
+    <div style="flex:1;display:flex;flex-direction:column;gap:24px;position:relative;margin-top:64px;">
+      <!-- Cursor pointer -->
+      <svg class="s7-cursor" viewBox="0 0 24 24" style="top:0;left:0;width:64px;height:64px;"><path d="M5 3l14 8-6.5 1.5L11 19z" fill="#282828" stroke="#fff" stroke-width="1"/></svg>
+      <!-- Message input field (same as slides 5-6) -->
+      <div class="s7-input conv-el">
+        <div style="background:#f9f9f9;border-radius:28px;border:1px solid rgba(0,0,0,0.06);padding:24px 24px 18px;display:flex;flex-direction:column;gap:18px;box-shadow:0 2px 8px rgba(0,0,0,0.03),0 8px 24px rgba(0,0,0,0.04);">
+          <p style="font-size:20px;font-weight:500;color:#282828;line-height:1.5;">Before you start, ask me 7–10 clarifying questions to understand my request as well as possible. For each question, suggest a few options to choose from.</p>
+          <div style="display:flex;align-items:center;justify-content:space-between;">
+            <div style="width:52px;height:52px;background:#fff;border:1px solid rgba(0,0,0,0.08);border-radius:14px;display:flex;align-items:center;justify-content:center;box-shadow:0 1px 3px rgba(0,0,0,0.06);">
+              <svg viewBox="0 0 24 24" fill="none" stroke="rgba(0,0,0,0.45)" stroke-width="2" stroke-linecap="round" style="width:26px;height:26px;"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            </div>
+            <div class="s7-send-btn" style="width:52px;height:52px;background:#282828;border-radius:14px;display:flex;align-items:center;justify-content:center;">
+              <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="width:24px;height:24px;"><path d="M12 19V5M5 12l7-7 7 7"/></svg>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- User bubble (right-aligned, appears after send) -->
+      <div class="s7-user-bubble conv-el" style="align-self:flex-end;max-width:80%;">
+        <div style="background:rgba(0,0,0,0.06);border-radius:22px 22px 6px 22px;padding:20px 24px;">
+          <p style="font-size:21px;font-weight:500;color:#282828;line-height:1.5;">Before you start, ask me 7–10 clarifying questions to understand my request as well as possible. For each question, suggest a few options to choose from.</p>
+        </div>
+      </div>
+      <!-- AI area (typing + response share same position) -->
+      <div style="align-self:flex-start;max-width:92%;position:relative;">
+        <!-- Typing indicator -->
+        <div class="s7-typing conv-el" style="position:absolute;top:0;left:0;">
+          <div style="background:rgba(0,0,0,0.06);border-radius:22px 22px 22px 6px;padding:18px 24px;display:flex;gap:6px;">
+            <div class="typing-dot"></div>
+            <div class="typing-dot"></div>
+            <div class="typing-dot"></div>
+          </div>
+        </div>
+        <!-- AI response bubble -->
+        <div class="s7-ai-bubble conv-el">
+        <div style="background:rgba(0,0,0,0.06);border-radius:22px 22px 22px 6px;padding:20px 24px;">
+          <p style="font-size:19px;font-weight:500;color:#282828;line-height:1.45;">Sure! Here are some questions before I start. I've added suggested options for each – feel free to pick one or tell me something different.<br><br><span style="font-weight:700;">1. How should severity levels work?</span><br>&nbsp;&nbsp;&nbsp;a) Binary – just critical vs. non-critical<br>&nbsp;&nbsp;&nbsp;b) Three tiers – critical, warning, info<br>&nbsp;&nbsp;&nbsp;c) Custom – let admins define their own levels<br><br><span style="font-weight:700;">2. How should notifications be grouped?</span><br>&nbsp;&nbsp;&nbsp;a) By server<br>&nbsp;&nbsp;&nbsp;b) By notification type<br>&nbsp;&nbsp;&nbsp;c) By time (most recent first)<br><br><span style="font-weight:700;">3. What delivery method do you prefer?</span><br>&nbsp;&nbsp;&nbsp;a) Real-time push<br>&nbsp;&nbsp;&nbsp;b) Polling every few minutes<br>&nbsp;&nbsp;&nbsp;c) Both, depending on severity<br><br><span style="font-weight:700;">4. Should users be able to customize notifications?</span><br>&nbsp;&nbsp;&nbsp;a) Yes – snooze, mute, and filter by type<br>&nbsp;&nbsp;&nbsp;b) Minimal – just mute specific types<br>&nbsp;&nbsp;&nbsp;c) No – same for everyone<br><br><span style="font-weight:700;">5. What platform are we designing for?</span><br>&nbsp;&nbsp;&nbsp;a) Desktop only<br>&nbsp;&nbsp;&nbsp;b) Desktop + mobile responsive<br>&nbsp;&nbsp;&nbsp;c) Desktop + native mobile app<br><br><span style="font-weight:700;">6. Should users be able to snooze or mute?</span><br>&nbsp;&nbsp;&nbsp;a) Yes – snooze for a set time + mute permanently<br>&nbsp;&nbsp;&nbsp;b) Just mute, no snooze<br>&nbsp;&nbsp;&nbsp;c) No – all notifications are always on<br><br><span style="font-weight:700;">7. What happens when an admin clicks a notification?</span><br>&nbsp;&nbsp;&nbsp;a) Opens the affected server/resource directly<br>&nbsp;&nbsp;&nbsp;b) Opens a detail panel within the dashboard<br>&nbsp;&nbsp;&nbsp;c) Expands inline with more info</p>
+        </div>
+      </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== 8 — RULE 4 (light, text + screenshot) ===== -->
+<div class="slide bg-light" data-slide="8">
+  <div class="pad" style="display:flex;gap:40px;">
+    <div style="flex:0.5;display:flex;flex-direction:column;gap:24px;">
+      <p class="a" style="font-size:28px;font-weight:700;color:var(--accent-text);">Rule 4</p>
+      <h2 class="a d1" style="font-size:64px;font-weight:800;color:#282828;line-height:1.1;">Ask for a plan before changes</h2>
+    </div>
+    <div style="flex:1;display:flex;flex-direction:column;gap:24px;position:relative;margin-top:64px;">
+      <!-- User bubble with answers + plan request -->
+      <div class="s8-user-bubble conv-el" style="align-self:flex-end;max-width:80%;">
+        <div style="background:rgba(0,0,0,0.06);border-radius:22px 22px 6px 22px;padding:20px 24px;">
+          <p style="font-size:19px;font-weight:500;color:#282828;line-height:1.5;">Here are my answers: 1b, 2a, 3c, 4a, 5b, 6a, 7a.<br><br>Now before you start making any changes, write a very detailed step-by-step implementation plan. I want to review and approve it first.</p>
+        </div>
+      </div>
+      <!-- AI area (typing + response share same position) -->
+      <div style="align-self:flex-start;max-width:92%;position:relative;">
+        <!-- Typing indicator -->
+        <div class="s8-typing conv-el" style="position:absolute;top:0;left:0;">
+          <div style="background:rgba(0,0,0,0.06);border-radius:22px 22px 22px 6px;padding:18px 24px;display:flex;gap:6px;">
+            <div class="typing-dot"></div>
+            <div class="typing-dot"></div>
+            <div class="typing-dot"></div>
+          </div>
+        </div>
+        <!-- AI response with plan -->
+        <div class="s8-ai-bubble conv-el">
+        <div style="background:rgba(0,0,0,0.06);border-radius:22px 22px 22px 6px;padding:20px 24px;">
+          <p style="font-size:19px;font-weight:500;color:#282828;line-height:1.5;">Here's a detailed plan. I won't change anything until you approve.<br><br><span style="font-weight:700;">Phase 1 – Notification data model</span><br><br>Before touching any UI, I'll set up the data structure:<br><br>– Define three severity tiers:<br>&nbsp;&nbsp;&nbsp;<span style="font-size:24px;">•</span> <span style="font-weight:700;">Critical</span> – server down, security breach, disk full (&gt;95%). Red accent, persistent until acknowledged.<br>&nbsp;&nbsp;&nbsp;<span style="font-size:24px;">•</span> <span style="font-weight:700;">Warning</span> – high CPU (&gt;80%), cert expiring within 7 days. Amber accent, stays until resolved.<br>&nbsp;&nbsp;&nbsp;<span style="font-size:24px;">•</span> <span style="font-weight:700;">Info</span> – deployment completed, backup finished. Neutral accent, auto-dismisses after 24h.<br>– Each notification stores: severity, server reference, title, message, timestamp, read/snoozed/muted state, and a deep link URL.<br><br><span style="font-weight:700;">Phase 2 – Notification feed panel</span><br><br>The main UI component admins interact with:<br><br>– Right-side drawer panel (480px on desktop, full-screen sheet on mobile)<br>– Header with title, filter dropdown, "Mark all read" action<br>– Notifications grouped under collapsible server headers, each showing server name, status dot, and unread count<br>– Within each group, sorted by severity first, then by time<br>– If a server has 5+ notifications, show first 3 with "Show more" link<br><br><span style="font-weight:700;">Notification card layout:</span><br>– 3px left color bar matching severity (red / amber / neutral)<br>– Title (bold), message (2 lines max, truncated), relative timestamp<br>– Dismiss button and three-dot menu (snooze, mute server, mark read)<br>– Unread cards get slightly elevated background; read cards go flat<br><br><span style="font-weight:700;">Phase 3 – Severity-based delivery</span><br><br>Routing logic based on your answers:<br><br>– <span style="font-weight:700;">Critical</span> → immediate in-app toast (top-right, auto-dismiss 10s) + browser push with sound + mobile push with high priority<br>– <span style="font-weight:700;">Warning</span> → in-app feed entry + silent browser push + normal-priority mobile push<br>– <span style="font-weight:700;">Info</span> → in-app feed only, no push, no toast<br><br>Critical toasts stack up to 3 max. Each has a "View" button that goes straight to the server.<br><br><span style="font-weight:700;">Phase 4 – Snooze, mute &amp; filter controls</span><br><br>– <span style="font-weight:700;">Snooze:</span> per-notification or per-server. Durations: 30min, 1h, 4h, until tomorrow, custom. Snoozed items move to a "Snoozed" section with countdown and unsnooze button. Critical snooze shows a confirmation dialog.<br>– <span style="font-weight:700;">Mute:</span> per-server, stops all notifications. Muted servers show a speaker-off icon everywhere. Safety constraint: muting doesn't suppress critical alerts by default (toggle available in preferences).<br>– <span style="font-weight:700;">Filters:</span> chips below the panel header – "All", "Critical", "Warning", "Info", "Unread only". Multiple can be active. State persists in local storage.<br><br><span style="font-weight:700;">Phase 5 – Responsive layout</span><br><br>– <span style="font-weight:700;">Desktop (&gt;1024px):</span> 480px right drawer with subtle scrim overlay<br>– <span style="font-weight:700;">Tablet (768–1024px):</span> 400px drawer, reduced card padding<br>– <span style="font-weight:700;">Mobile (&lt;768px):</span> full-screen bottom sheet, swipe-left to dismiss, swipe-right to snooze, sticky group headers during scroll, top banner for critical alerts<br><br><span style="font-weight:700;">Phase 6 – Click-through navigation</span><br><br>Clicking a notification navigates to the affected server page. The relevant metric section auto-scrolls and highlights briefly. Notification auto-marks as read. On mobile, panel closes before navigating.<br><br><span style="font-weight:700;">Phase 7 – Badge &amp; unread management</span><br><br>– Bell icon in header shows red dot for info-only unreads, numbered badge for warning/critical<br>– Badge count = warning + critical only (info excluded to reduce noise)<br>– Badge pulses once when a new critical notification arrives<br>– Opening the panel does NOT auto-mark as read – only explicit actions do<br><br><span style="font-weight:700;">Phase 8 – Preferences &amp; polish</span><br><br>– Delivery rules table: severity tiers × channels (in-app, browser push, mobile push, email) with checkboxes<br>– Muted/snoozed servers lists with unmute/unsnooze controls<br>– "Do not disturb" mode with duration picker (suppresses everything except critical)<br>– Quiet hours option (e.g. 10pm–7am, critical only)<br>– Smooth 200ms transitions, skeleton loading states, empty state with "You're all caught up" message<br><br><span style="font-weight:700;">Recommended order:</span> Phase 1 → 2 → 4 → 7 → 3 → 6 → 5 → 8. I can deliver Phases 1–2–7 as a first working version, then layer on the rest. Let me know if you'd like to adjust anything.</p>
+        </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== 9 — RULE 5 (light, text + screenshot) ===== -->
+<div class="slide bg-light" data-slide="9">
+  <div class="pad" style="display:flex;gap:40px;">
+    <div style="flex:0.5;display:flex;flex-direction:column;gap:24px;">
+      <p class="a" style="font-size:28px;font-weight:700;color:var(--accent-text);">Rule 5</p>
+      <h2 class="a d1" style="font-size:64px;font-weight:800;color:#282828;line-height:1.1;">Review, give feedback, only then approve</h2>
+    </div>
+    <div style="flex:1;display:flex;flex-direction:column;gap:24px;position:relative;margin-top:64px;">
+      <!-- User feedback bubble -->
+      <div class="s9-user-bubble conv-el" style="align-self:flex-end;max-width:80%;">
+        <div style="background:rgba(0,0,0,0.06);border-radius:22px 22px 6px 22px;padding:20px 24px;">
+          <p style="font-size:19px;font-weight:500;color:#282828;line-height:1.5;">Overall looks good, a few changes:<br><br><span style="font-size:24px;">•</span> Phase 2: skip the drawer, use a dropdown panel from the bell icon instead. Simpler and doesn't block the main view.<br><span style="font-size:24px;">•</span> Phase 3: no sound on browser push, our users will hate that.<br><span style="font-size:24px;">•</span> Phase 5: drop mobile for now, we'll do that in v2.<br><span style="font-size:24px;">•</span> Phase 8: skip the preferences page entirely for v1, just hardcode sensible defaults.<br><br>Everything else looks fine. Update the plan and let's go.</p>
+        </div>
+      </div>
+      <!-- AI area (typing + response share same position) -->
+      <div style="align-self:flex-start;max-width:92%;position:relative;">
+        <div class="s9-typing conv-el" style="position:absolute;top:0;left:0;">
+          <div style="background:rgba(0,0,0,0.06);border-radius:22px 22px 22px 6px;padding:18px 24px;display:flex;gap:6px;">
+            <div class="typing-dot"></div>
+            <div class="typing-dot"></div>
+            <div class="typing-dot"></div>
+          </div>
+        </div>
+        <div class="s9-ai-bubble conv-el">
+        <div style="background:rgba(0,0,0,0.06);border-radius:22px 22px 22px 6px;padding:20px 24px;">
+          <p style="font-size:19px;font-weight:500;color:#282828;line-height:1.5;">Updated plan with your feedback:<br><br><span style="font-weight:700;">Phase 1 – Notification data model</span> (unchanged)<br>Three severity tiers (critical, warning, info) with server reference, timestamps, read/snoozed/muted state, deep link URL.<br><br><span style="font-weight:700;">Phase 2 – Notification dropdown panel</span> (updated)<br>Replace the drawer with a dropdown panel anchored to the bell icon in the header. Max height 600px with scroll. Same grouping by server, same card layout with colored left borders. Opens on click, closes on click outside or Escape.<br><br><span style="font-weight:700;">Phase 3 – Severity-based delivery</span> (updated)<br><span style="font-size:24px;">•</span> Critical → in-app toast (top-right, auto-dismiss 10s) + silent browser push + high-priority mobile push<br><span style="font-size:24px;">•</span> Warning → in-app feed entry + silent browser push<br><span style="font-size:24px;">•</span> Info → in-app feed only<br>No sound on any notification. All browser push is silent.<br><br><span style="font-weight:700;">Phase 4 – Snooze, mute &amp; filter controls</span> (unchanged)<br>Snooze per-notification or per-server (30min / 1h / 4h / until tomorrow). Mute per-server with safety constraint for critical alerts. Filter chips in the panel header.<br><br><span style="font-weight:700;">Phase 5 – Click-through navigation</span> (was Phase 6)<br>Clicking a notification opens the server detail page, auto-scrolls to the relevant metric section, marks as read.<br><br><span style="font-weight:700;">Phase 6 – Badge &amp; unread management</span> (was Phase 7)<br>Bell icon badge shows count of warning + critical unreads only. Red dot for info-only unreads. Single pulse on new critical arrival. No auto-mark-as-read on panel open.<br><br><span style="font-weight:700;">Removed:</span> Phase 5 (mobile responsive) and Phase 8 (preferences page) – deferred to v2. Using hardcoded defaults: critical gets push + toast, warning gets silent push, info is feed-only.<br><br>Ready to start with Phase 1. Go?</p>
+        </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== 10 — FIGMA MAKE (dark, centered) ===== -->
+<div class="slide bg-dark" data-slide="10" data-anim="blurIn">
+  <div class="pad" style="display:flex;flex-direction:column;align-items:center;justify-content:center;gap:24px;">
+    <h2 class="a" style="font-size:150px;font-weight:800;color:#fff;line-height:1.05;letter-spacing:-2px;text-align:center;">Figma Make</h2>
+    <p class="a d1" style="font-size:36px;font-weight:600;color:rgba(255,255,255,0.35);text-align:center;">Two use cases where it works</p>
+  </div>
+</div>
+
+<!-- ===== 11 — USE CASE 1 (dark, title + video) ===== -->
+<div class="slide bg-dark" data-slide="11">
+  <div class="pad" style="display:flex;flex-direction:column;gap:24px;">
+    <p class="a" style="font-size:28px;font-weight:600;color:rgba(255,255,255,0.3);">1. Brainstorming adjustments to an existing design</p>
+    <div class="video-wrap paused a d1" style="flex:1;min-height:892px;margin-top:8px;border-radius:24px;overflow:hidden;border:2px solid #38322d;">
+      <video src="slide-11.mp4" style="width:100%;height:100%;object-fit:cover;border-radius:24px;" muted playsinline></video>
+      <div class="video-pause-icon"><svg viewBox="0 0 24 24" fill="#fff" style="width:36px;height:36px;"><path d="M8 5v14l11-7z"/></svg></div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== 12 — USE CASE 2 (dark) ===== -->
+<div class="slide bg-dark" data-slide="12">
+  <div class="pad" style="display:flex;flex-direction:column;gap:24px;">
+    <p class="a" style="font-size:28px;font-weight:600;color:rgba(255,255,255,0.3);">2. Prototyping for demos and handoff</p>
+    <div class="video-wrap paused a d1" style="flex:1;min-height:892px;margin-top:8px;border-radius:24px;overflow:hidden;border:2px solid #38322d;">
+      <video src="slide-12.mp4" style="width:100%;height:100%;object-fit:cover;border-radius:24px;" muted playsinline></video>
+      <div class="video-pause-icon"><svg viewBox="0 0 24 24" fill="#fff" style="width:36px;height:36px;"><path d="M8 5v14l11-7z"/></svg></div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== 14 — SMALL FILES TIP (light, text + screenshot like slide 5) ===== -->
+<div class="slide bg-light" data-slide="13">
+  <div class="pad" style="display:flex;gap:40px;">
+    <div style="flex:0.5;display:flex;flex-direction:column;gap:24px;">
+      <p class="a" style="font-size:28px;font-weight:700;color:rgba(40,40,40,0.35);">Programming basics</p>
+      <h2 class="a d1" style="font-size:64px;font-weight:800;color:#282828;line-height:1.1;">Create many small files, not one big file</h2>
+    </div>
+    <div class="a d2 float-always" style="flex:1;border-radius:24px;overflow:hidden;border:2px solid rgba(0,0,0,0.04);">
+      <img src="slide-14.png" alt="Programming basics article" style="width:100%;height:100%;object-fit:cover;border-radius:24px;">
+    </div>
+  </div>
+</div>
+
+<!-- ===== 15 — WHEN MAKE ISN'T ENOUGH (light, centered section opener) ===== -->
+<div class="slide bg-light" data-slide="14" data-anim="blurIn">
+  <div class="pad" style="display:flex;flex-direction:column;align-items:center;justify-content:center;gap:48px;">
+    <h2 class="a" style="font-size:150px;font-weight:800;color:#282828;line-height:1.05;letter-spacing:-2px;text-align:center;">When Make<br>isn't enough</h2>
+    <p class="a d1" style="font-size:36px;font-weight:600;color:rgba(40,40,40,0.35);text-align:center;">Need a complex / mobile prototype? Use Claude</p>
+  </div>
+</div>
+
+<!-- ===== 16 — CURSOR & CLAUDE CODE (light, small title + two screenshots) ===== -->
+<div class="slide bg-light" data-slide="15" data-anim="slideLeft">
+  <div class="pad" style="display:flex;flex-direction:column;gap:24px;">
+    <div class="a" style="display:grid;grid-template-columns:1.4fr 1fr;gap:24px;">
+      <p style="font-size:28px;font-weight:700;color:#282828;">Cursor</p>
+      <p style="font-size:28px;font-weight:700;color:#282828;">Claude Code</p>
+    </div>
+    <div class="a d1" style="display:grid;grid-template-columns:1.4fr 1fr;gap:24px;flex:1;">
+      <div class="float-always" style="border-radius:24px;overflow:hidden;border:2px solid rgba(0,0,0,0.08);box-shadow:0 2px 8px rgba(0,0,0,0.03),0 8px 24px rgba(0,0,0,0.04);">
+        <img src="slide-15-cursor.png" alt="Cursor interface" style="width:100%;height:100%;object-fit:cover;border-radius:24px;">
+      </div>
+      <div class="float-always-reverse" style="border-radius:24px;overflow:hidden;border:2px solid rgba(0,0,0,0.04);box-shadow:0 2px 8px rgba(0,0,0,0.03),0 8px 24px rgba(0,0,0,0.04);">
+        <img src="slide-15-claude.png" alt="Claude Code in terminal" style="width:100%;height:100%;object-fit:cover;border-radius:24px;">
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== 17 — MONEY COMPARISON (light, two columns like slide 16) ===== -->
+<div class="slide bg-light" data-slide="16" data-anim="slideLeft">
+  <div class="pad" style="display:flex;flex-direction:column;">
+    <p class="a" style="font-size:28px;font-weight:600;color:rgba(40,40,40,0.35);margin-bottom:40px;">Money wise Claude Code is a better deal</p>
+    <div class="a d1" style="display:grid;grid-template-columns:1fr 1fr;gap:60px;flex:1;align-content:center;">
+      <div style="display:flex;flex-direction:column;gap:16px;">
+        <h2 style="font-size:110px;font-weight:800;color:#282828;line-height:1.05;">Cursor</h2>
+        <p style="font-size:44px;font-weight:600;color:rgba(40,40,40,0.4);line-height:1.3;">$20 of tokens per month</p>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:16px;">
+        <h2 style="font-size:110px;font-weight:800;color:#282828;line-height:1.05;">Claude Code</h2>
+        <p style="font-size:44px;font-weight:600;color:rgba(40,40,40,0.4);line-height:1.3;">$20/month, refreshes every 5 hours</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== 18 — VIDEO: ROUND TRIP (light, small title + big video) ===== -->
+<div class="slide bg-light" data-slide="17">
+  <div class="pad" style="display:flex;flex-direction:column;gap:24px;">
+    <p class="a" style="font-size:28px;font-weight:600;color:rgba(40,40,40,0.35);">Figma → Claude Code → back to Figma round trip</p>
+    <div class="video-wrap paused a d1" style="flex:1;min-height:892px;margin-top:8px;border-radius:32px;overflow:hidden;border:2px solid rgba(0,0,0,0.08);">
+      <video src="slide-17.mp4" style="width:calc(100% + 2px);height:calc(100% + 2px);object-fit:cover;border-radius:32px;display:block;margin:-1px;" muted playsinline></video>
+      <div class="video-pause-icon"><svg viewBox="0 0 24 24" fill="#fff" style="width:36px;height:36px;"><path d="M8 5v14l11-7z"/></svg></div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== 19 — TWO WAYS TO HAND OFF (dark, two columns like slide 17) ===== -->
+<div class="slide bg-dark" data-slide="18" data-anim="slideLeft">
+  <div class="pad" style="display:flex;flex-direction:column;">
+    <p class="a" style="font-size:28px;font-weight:600;color:rgba(255,255,255,0.3);margin-bottom:40px;">Two ways to hand off designs</p>
+    <div class="a d1" style="display:grid;grid-template-columns:1fr 1fr;gap:60px;flex:1;align-content:center;">
+      <div style="display:flex;flex-direction:column;gap:16px;">
+        <h2 style="font-size:110px;font-weight:800;color:#fff;line-height:1.05;">Old</h2>
+        <p style="font-size:44px;font-weight:600;color:rgba(255,255,255,0.4);line-height:1.3;">Prepare a Figma file</p>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:16px;">
+        <h2 style="font-size:110px;font-weight:800;color:#fff;line-height:1.05;">New</h2>
+        <p style="font-size:44px;font-weight:600;color:rgba(255,255,255,0.4);line-height:1.3;">Do it yourself on GitHub</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== 20 — AI CAPABILITIES (dark, asymmetric) ===== -->
+<div class="slide bg-dark" data-slide="19">
+  <div class="pad" style="display:flex;flex-direction:column;justify-content:space-between;">
+    <h2 class="a" style="font-size:130px;font-weight:800;color:#fff;line-height:1.05;max-width:900px;letter-spacing:-2px;">Making AI smarter with capabilities</h2>
+    <div class="a d1" style="align-self:flex-end;max-width:800px;">
+      <div style="display:flex;flex-direction:column;gap:12px;">
+        <p style="font-size:32px;font-weight:800;color:#fff;">Skills <span style="font-weight:600;color:rgba(255,255,255,0.4);">– turn experience into reusable prompts</span></p>
+        <p style="font-size:32px;font-weight:800;color:#fff;">Global rules <span style="font-weight:600;color:rgba(255,255,255,0.4);">– store team standards</span></p>
+        <p style="font-size:32px;font-weight:800;color:#fff;">MCPs and plugins <span style="font-weight:600;color:rgba(255,255,255,0.4);">– integrate with other tools</span></p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== 21 — FIGMA CONSOLE MCP (dark, two columns like 17/19) ===== -->
+<div class="slide bg-dark" data-slide="20" data-anim="slideLeft">
+  <div class="pad" style="display:flex;flex-direction:column;">
+    <p class="a" style="font-size:28px;font-weight:600;color:rgba(255,255,255,0.3);margin-bottom:40px;">Integration with Figma</p>
+    <div class="a d1" style="display:grid;grid-template-columns:1fr 1fr;gap:60px;flex:1;align-content:center;">
+      <div style="display:flex;flex-direction:column;gap:16px;">
+        <h2 style="font-size:96px;font-weight:800;color:#fff;line-height:1.05;">Official plugin</h2>
+        <p style="font-size:44px;font-weight:600;color:rgba(255,255,255,0.4);line-height:1.3;">Exports designs, imports it back</p>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:16px;">
+        <h2 style="font-size:96px;font-weight:800;color:#fff;line-height:1.05;">Console MCP</h2>
+        <p style="font-size:44px;font-weight:600;color:rgba(255,255,255,0.4);line-height:1.3;">Claude performs actions in Figma</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== 22 — VIDEO: FIGMA CONSOLE (dark, small title + big video) ===== -->
+<div class="slide bg-dark" data-slide="21">
+  <div class="pad" style="display:flex;flex-direction:column;gap:24px;">
+    <p class="a" style="font-size:28px;font-weight:600;color:rgba(255,255,255,0.3);">Raw designs → organized components with tokens and auto layouts</p>
+    <div class="video-wrap paused a d1" style="flex:1;min-height:892px;margin-top:8px;border-radius:32px;overflow:hidden;border:2px solid #38322d;">
+      <video src="slide-21.mp4" style="width:calc(100% + 2px);height:calc(100% + 2px);object-fit:cover;border-radius:32px;display:block;margin:-1px;" muted playsinline></video>
+      <div class="video-pause-icon"><svg viewBox="0 0 24 24" fill="#fff" style="width:36px;height:36px;"><path d="M8 5v14l11-7z"/></svg></div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== 23 — AI FOR RESEARCH (light, three columns) ===== -->
+<div class="slide bg-light" data-slide="22">
+  <div class="pad" style="display:flex;flex-direction:column;">
+    <p class="a" style="font-size:28px;font-weight:600;color:rgba(40,40,40,0.35);margin-bottom:40px;">How to use AI for research</p>
+    <div class="a d1" style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:48px;flex:1;align-content:center;">
+      <div style="display:flex;flex-direction:column;gap:16px;">
+        <p style="font-size:80px;font-weight:800;color:rgba(40,40,40,0.15);">1</p>
+        <p style="font-size:40px;font-weight:800;color:#282828;line-height:1.2;">Analyze any results yourself first</p>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:16px;">
+        <p style="font-size:80px;font-weight:800;color:rgba(40,40,40,0.15);">2</p>
+        <p style="font-size:40px;font-weight:800;color:#282828;line-height:1.2;">Ask AI without sharing your thoughts</p>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:16px;">
+        <p style="font-size:80px;font-weight:800;color:rgba(40,40,40,0.15);">3</p>
+        <p style="font-size:40px;font-weight:800;color:#282828;line-height:1.2;">Merge both analyses together</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== 24 — SECURITY (light, asymmetric) ===== -->
+<div class="slide bg-light" data-slide="23">
+  <div class="pad" style="display:flex;flex-direction:column;justify-content:space-between;">
+    <div class="a">
+      <h2 style="font-size:96px;font-weight:800;color:rgba(40,40,40,0.3);line-height:1.05;letter-spacing:-2px;margin-bottom:16px;">Sometimes you pay not with $$$</h2>
+      <h2 class="d1" style="font-size:96px;font-weight:800;color:#282828;line-height:1.05;letter-spacing:-2px;">but with your data</h2>
+    </div>
+    <div class="a d2" style="align-self:flex-end;max-width:700px;margin-right:48px;">
+      <div style="display:flex;flex-direction:column;gap:10px;">
+        <p style="font-size:30px;white-space:nowrap;"><span style="font-weight:800;color:rgba(40,40,40,0.25);margin-right:8px;">1.</span><span style="font-weight:800;color:#282828;">Don't share</span> <span style="font-weight:600;color:rgba(40,40,40,0.35);">what you wouldn't with a stranger</span></p>
+        <p style="font-size:30px;white-space:nowrap;"><span style="font-weight:800;color:rgba(40,40,40,0.25);margin-right:8px;">2.</span><span style="font-weight:800;color:#282828;">NDA?</span> <span style="font-weight:600;color:rgba(40,40,40,0.35);">Ask permission or replace with mock data</span></p>
+        <p style="font-size:30px;white-space:nowrap;"><span style="font-weight:800;color:rgba(40,40,40,0.25);margin-right:8px;">3.</span><span style="font-weight:800;color:#282828;">Free plans</span> <span style="font-weight:600;color:rgba(40,40,40,0.35);">often mean training on your data</span></p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== 25 — THREE ARTICLES (light, text left + stacked screenshots right) ===== -->
+<div class="slide bg-light" data-slide="24">
+  <div class="pad" style="display:flex;gap:60px;align-items:center;">
+    <div style="flex:0.4;display:flex;flex-direction:column;gap:48px;">
+      <h2 class="a" style="font-size:64px;font-weight:800;color:#282828;line-height:1.1;">Three articles that cover everything</h2>
+      <div class="a d1" style="display:flex;flex-direction:column;gap:20px;">
+        <div style="width:220px;height:220px;border-radius:14px;background:#fff;padding:16px;border:2px solid rgba(0,0,0,0.08);"><img src="qr-site.svg" alt="QR code for volomydyr.com" style="width:100%;height:100%;"></div>
+        <p style="font-size:28px;font-weight:600;color:rgba(40,40,40,0.35);">volomydyr.com</p>
+      </div>
+    </div>
+    <div class="article-scroll" style="flex:1;position:relative;align-self:stretch;margin-left:60px;">
+      <!-- First set -->
+      <div class="card-drift-1" style="position:absolute;width:1000px;height:620px;border-radius:24px;top:-460px;left:60px;box-shadow:0 2px 8px rgba(0,0,0,0.03),0 8px 24px rgba(0,0,0,0.04);overflow:hidden;">
+        <img src="slide-24-1.png" alt="Від дизайнера до підприємця" style="width:calc(100% + 2px);height:calc(100% + 2px);object-fit:cover;margin:-1px;">
+      </div>
+      <div class="card-drift-2" style="position:absolute;width:1000px;height:620px;border-radius:24px;top:212px;left:60px;box-shadow:0 2px 8px rgba(0,0,0,0.03),0 8px 24px rgba(0,0,0,0.04);overflow:hidden;">
+        <img src="slide-24-2.png" alt="Designer's guide to AI-assisted development" style="width:calc(100% + 2px);height:calc(100% + 2px);object-fit:cover;margin:-1px;">
+      </div>
+      <div class="card-drift-3" style="position:absolute;width:1000px;height:620px;border-radius:24px;top:884px;left:60px;box-shadow:0 2px 8px rgba(0,0,0,0.03),0 8px 24px rgba(0,0,0,0.04);overflow:hidden;">
+        <img src="slide-24-3.png" alt="Технічна база для дизайну" style="width:calc(100% + 2px);height:calc(100% + 2px);object-fit:cover;margin:-1px;">
+      </div>
+      <!-- Duplicate set for seamless loop -->
+      <div class="card-drift-1" style="position:absolute;width:1000px;height:620px;border-radius:24px;top:1556px;left:60px;box-shadow:0 2px 8px rgba(0,0,0,0.03),0 8px 24px rgba(0,0,0,0.04);overflow:hidden;">
+        <img src="slide-24-1.png" alt="Від дизайнера до підприємця" style="width:calc(100% + 2px);height:calc(100% + 2px);object-fit:cover;margin:-1px;">
+      </div>
+      <div class="card-drift-2" style="position:absolute;width:1000px;height:620px;border-radius:24px;top:2228px;left:60px;box-shadow:0 2px 8px rgba(0,0,0,0.03),0 8px 24px rgba(0,0,0,0.04);overflow:hidden;">
+        <img src="slide-24-2.png" alt="Designer's guide to AI-assisted development" style="width:calc(100% + 2px);height:calc(100% + 2px);object-fit:cover;margin:-1px;">
+      </div>
+      <div class="card-drift-3" style="position:absolute;width:1000px;height:620px;border-radius:24px;top:2900px;left:60px;box-shadow:0 2px 8px rgba(0,0,0,0.03),0 8px 24px rgba(0,0,0,0.04);overflow:hidden;">
+        <img src="slide-24-3.png" alt="Технічна база для дизайну" style="width:calc(100% + 2px);height:calc(100% + 2px);object-fit:cover;margin:-1px;">
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== 26 — INSPIRATIONAL CLOSE (deep dark, centered punchline) ===== -->
+<div class="slide bg-deep" data-slide="25" data-anim="scaleIn">
+  <div class="pad" style="display:flex;flex-direction:column;align-items:center;justify-content:center;gap:48px;">
+    <p class="a" style="font-size:36px;font-weight:600;color:rgba(255,255,255,0.3);text-align:center;">The best time to start was two years ago</p>
+    <h1 class="a d1" style="font-size:140px;font-weight:800;color:#fff;line-height:1.05;letter-spacing:-2px;text-align:center;">The second best<br>time is <span style="position:relative;display:inline-block;white-space:nowrap;">right now<svg class="draw-in" style="position:absolute;bottom:-52px;left:0px;width:700px;height:60px;" viewBox="0 0 700 40" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M8 30C45 22 90 28 150 18C210 12 270 26 340 16C400 10 460 24 520 14C570 10 620 20 692 22" style="stroke:#ff5c5c" stroke-width="10" stroke-linecap="round"/></svg></span></h1>
+  </div>
+</div>
+
+<!-- ===== 27 — Q&A (deep dark) ===== -->
+<div class="slide bg-deep" data-slide="26">
+  <div class="pad" style="display:flex;flex-direction:column;align-items:center;justify-content:center;gap:48px;">
+    <h1 class="a" style="font-size:200px;font-weight:800;color:#fff;letter-spacing:-4px;">Q&A</h1>
+    <div class="a d1" style="width:260px;height:260px;border-radius:14px;background:#fff;padding:16px;border:2px solid #38322d;"><img src="qr-telegram.svg" alt="QR code for Telegram community" style="width:100%;height:100%;"></div>
+    <p class="a d2" style="font-size:28px;font-weight:600;color:rgba(255,255,255,0.3);">Telegram community</p>
+  </div>
+</div>
+
+</div><!-- /deck -->
+
+<!-- 8 · Progress bar replaces counter, fixes "1/28" bug -->
+<div class="progress-bar" id="progress"><div class="progress-fill" id="progressFill"></div></div>
+
+
+<script>
+const slides = document.querySelectorAll('.slide');
+const progressFill = document.getElementById('progressFill');
+const deck = document.getElementById('deck');
+const SECTION_OPENERS = ['4', '10', '14'];
+let cur = 0;
+
+/* ── resize (untouched) ── */
+function resize() {
+  const s = Math.min(innerWidth / 1920, innerHeight / 1080);
+  const ox = (innerWidth - 1920 * s) / 2;
+  const oy = (innerHeight - 1080 * s) / 2;
+  deck.style.transform = `translate(${ox}px,${oy}px) scale(${s})`;
+}
+
+/* ── progress bar ── */
+function updateProgress() {
+  progressFill.style.width = `${((cur + 1) / slides.length) * 100}%`;
+}
+
+/* Tracked timeouts — cleared on every slide change */
+let slideTimeouts = [];
+function slideTimeout(fn, delay) {
+  slideTimeouts.push(setTimeout(fn, delay));
+}
+
+/* ── go() — direction-aware transitions ── */
+function go(n) {
+  if (n < 0 || n >= slides.length || n === cur) return;
+
+  /* Clear all pending slide timeouts and typing intervals */
+  slideTimeouts.forEach(t => clearTimeout(t));
+  slideTimeouts = [];
+  ['_typing1','_typing2','_typing3','_typing4'].forEach(k => clearInterval(window[k]));
+
+  const forward = n > cur;
+  const old = slides[cur];
+
+  /* Clean up ambient float before exit to prevent snap */
+  old.querySelectorAll('.ambient-float').forEach(el =>
+    el.classList.remove('ambient-float')
+  );
+
+  /* 2 · Direction-aware exit */
+  old.classList.add(forward ? 'exit-fwd' : 'exit-bwd');
+  old.classList.remove('active');
+
+  /* Remove exit class after transition completes */
+  setTimeout(() => {
+    old.classList.remove('exit-fwd', 'exit-bwd');
+  }, 450);
+
+  /* Pause and reset videos on outgoing slide */
+  old.querySelectorAll('.video-wrap').forEach(wrap => {
+    const vid = wrap.querySelector('video');
+    if (vid) { vid.pause(); vid.currentTime = 0; }
+    wrap.classList.remove('paused');
+  });
+
+  /* Reset & activate new slide */
+  slides[n].querySelectorAll('.a').forEach(el => {
+    el.style.animation = 'none';
+    void el.offsetHeight;
+    el.style.animation = '';
+  });
+  slides[n].classList.add('active');
+  cur = n;
+  updateProgress();
+
+  /* Reset videos on incoming slide (paused at start) */
+  slides[n].querySelectorAll('.video-wrap').forEach(wrap => {
+    const vid = wrap.querySelector('video');
+    if (vid) {
+      vid.currentTime = 0;
+      vid.onended = () => wrap.classList.add('paused');
+    }
+    wrap.classList.add('paused');
+  });
+
+  /* 4 · Ambient float on section openers after entrance settles */
+  const slideNum = slides[n].dataset.slide;
+  if (SECTION_OPENERS.includes(slideNum)) {
+    slideTimeout(() => {
+      const heading = slides[n].querySelector('h1, h2');
+      if (heading) heading.classList.add('ambient-float');
+    }, 800);
+  }
+
+  /* Shared typing function */
+  function typeText(el, delay, key) {
+    if (!el) return;
+    const text = el.dataset.text;
+    el.textContent = '';
+    slideTimeout(() => {
+      const cursor = document.createElement('span');
+      cursor.className = 'typing-cursor';
+      el.appendChild(cursor);
+      let i = 0;
+      window[key] = setInterval(() => {
+        if (i < text.length) {
+          el.textContent = text.slice(0, i + 1);
+          el.appendChild(cursor);
+          i++;
+        } else {
+          clearInterval(window[key]);
+          slideTimeout(() => { if (cursor.parentNode) cursor.remove(); }, 1500);
+        }
+      }, 30);
+    }, delay);
+  }
+
+  /* Slide 5 — indicators and animations */
+  if (slideNum === '5') {
+    const slide5 = slides[n];
+    slide5.querySelectorAll('.indicator-bad, .indicator-good').forEach(el => {
+      el.classList.remove('settled');
+    });
+    const goodEl = slide5.querySelector('.slide5-good');
+    if (goodEl) goodEl.classList.remove('visible');
+    slide5.querySelector('.slide5-good')?.parentElement?.classList.remove('indicators-go');
+
+    /* Reset typing text */
+    const tpBad = document.getElementById('typing-prompt-bad');
+    const tpGood = document.getElementById('typing-prompt');
+    if (tpBad) tpBad.textContent = '';
+    if (tpGood) tpGood.textContent = '';
+
+    slideTimeout(() => { if (goodEl) goodEl.classList.add('visible'); }, 2500);
+    slideTimeout(() => {
+      slide5.querySelector('.slide5-good')?.parentElement?.classList.add('indicators-go');
+    }, 7000);
+    slideTimeout(() => {
+      slide5.querySelectorAll('.indicator-bad, .indicator-good').forEach(el => {
+        el.classList.add('settled');
+      });
+    }, 8000);
+
+    typeText(tpBad, 400, '_typing1');
+    typeText(tpGood, 3900, '_typing2');
+  }
+
+  /* Slide 7 — chat conversation sequence */
+  if (slideNum === '7') {
+    const s7 = slides[n];
+    const input = s7.querySelector('.s7-input');
+    const cursor = s7.querySelector('.s7-cursor');
+    const sendBtn = s7.querySelector('.s7-send-btn');
+    const userBubble = s7.querySelector('.s7-user-bubble');
+    const typing = s7.querySelector('.s7-typing');
+    const aiBubble = s7.querySelector('.s7-ai-bubble');
+
+    /* Reset all */
+    [input, userBubble, typing, aiBubble].forEach(el => {
+      if (el) el.classList.remove('visible', 'hidden', 'collapsed');
+    });
+    if (cursor) { cursor.classList.remove('visible'); cursor.style.transition = 'none'; }
+    if (sendBtn) sendBtn.style.transform = '';
+
+    slideTimeout(() => { if (input) input.classList.add('visible'); }, 180);
+    slideTimeout(() => {
+      if (cursor) {
+        cursor.style.transition = 'none';
+        cursor.style.top = '40px';
+        cursor.style.left = '400px';
+        cursor.classList.add('visible');
+        void cursor.offsetHeight;
+        cursor.style.transition = 'top 0.6s var(--ease-out-expo), left 0.6s var(--ease-out-expo), opacity 0.25s ease';
+      }
+    }, 1400);
+    slideTimeout(() => {
+      if (cursor) { cursor.style.top = '114px'; cursor.style.left = '1090px'; }
+    }, 1550);
+    slideTimeout(() => { if (sendBtn) sendBtn.style.transform = 'scale(0.85)'; }, 2200);
+    slideTimeout(() => {
+      if (sendBtn) sendBtn.style.transform = '';
+      if (cursor) cursor.classList.remove('visible');
+    }, 2350);
+    slideTimeout(() => { if (input) input.classList.add('hidden'); }, 2400);
+    slideTimeout(() => {
+      if (input) input.classList.add('collapsed');
+      if (userBubble) userBubble.classList.add('visible');
+    }, 2750);
+    slideTimeout(() => { if (typing) typing.classList.add('visible'); }, 3400);
+    slideTimeout(() => { if (typing) typing.classList.add('hidden'); }, 5000);
+    slideTimeout(() => { if (aiBubble) aiBubble.classList.add('visible'); }, 5200);
+  }
+
+  /* Slide 9 — feedback conversation */
+  if (slideNum === '9') {
+    const s9 = slides[n];
+    const userBubble9 = s9.querySelector('.s9-user-bubble');
+    const typing9 = s9.querySelector('.s9-typing');
+    const aiBubble9 = s9.querySelector('.s9-ai-bubble');
+
+    [userBubble9, typing9, aiBubble9].forEach(el => {
+      if (el) el.classList.remove('visible', 'hidden', 'collapsed');
+    });
+
+    slideTimeout(() => { if (userBubble9) userBubble9.classList.add('visible'); }, 400);
+    slideTimeout(() => { if (typing9) typing9.classList.add('visible'); }, 1400);
+    slideTimeout(() => { if (typing9) typing9.classList.add('hidden'); }, 3000);
+    slideTimeout(() => {
+      if (typing9) typing9.classList.add('collapsed');
+      if (aiBubble9) aiBubble9.classList.add('visible');
+    }, 3200);
+  }
+
+  /* Slide 8 — plan conversation */
+  if (slideNum === '8') {
+    const s8 = slides[n];
+    const userBubble8 = s8.querySelector('.s8-user-bubble');
+    const typing8 = s8.querySelector('.s8-typing');
+    const aiBubble8 = s8.querySelector('.s8-ai-bubble');
+
+    [userBubble8, typing8, aiBubble8].forEach(el => {
+      if (el) el.classList.remove('visible', 'hidden', 'collapsed');
+    });
+
+    /* 1. User bubble appears */
+    slideTimeout(() => { if (userBubble8) userBubble8.classList.add('visible'); }, 400);
+    slideTimeout(() => { if (typing8) typing8.classList.add('visible'); }, 1400);
+    slideTimeout(() => { if (typing8) typing8.classList.add('hidden'); }, 3000);
+    slideTimeout(() => {
+      if (typing8) typing8.classList.add('collapsed');
+      if (aiBubble8) aiBubble8.classList.add('visible');
+    }, 3200);
+  }
+
+}
+
+/* ── keyboard ── */
+addEventListener('keydown', e => {
+  if (e.key === 'ArrowRight' || e.key === 'ArrowDown' || e.key === ' ') {
+    e.preventDefault(); go(cur + 1);
+  }
+  if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
+    e.preventDefault(); go(cur - 1);
+  }
+  if (e.key === 'Home') go(0);
+  if (e.key === 'End') go(slides.length - 1);
+});
+
+/* ── click ── */
+document.addEventListener('click', e => {
+  /* Video click — pause/play instead of navigating */
+  const wrap = e.target.closest('.video-wrap');
+  if (wrap) {
+    const vid = wrap.querySelector('video');
+    if (vid) {
+      if (vid.ended) { vid.currentTime = 0; vid.play(); wrap.classList.remove('paused'); }
+      else if (vid.paused) { vid.play(); wrap.classList.remove('paused'); }
+      else { vid.pause(); wrap.classList.add('paused'); }
+    }
+    return;
+  }
+  if (e.clientX / innerWidth > 0.5) go(cur + 1);
+  else go(cur - 1);
+});
+
+/* ── 9 · Touch / swipe ── */
+let touchX0 = 0, touchY0 = 0;
+document.addEventListener('touchstart', e => {
+  touchX0 = e.touches[0].clientX;
+  touchY0 = e.touches[0].clientY;
+}, { passive: true });
+document.addEventListener('touchend', e => {
+  const dx = e.changedTouches[0].clientX - touchX0;
+  const dy = e.changedTouches[0].clientY - touchY0;
+  if (Math.abs(dx) > Math.abs(dy) && Math.abs(dx) > 50) {
+    dx < 0 ? go(cur + 1) : go(cur - 1);
+  }
+});
+
+/* ── live film grain — redraws noise every frame ── */
+(function liveGrain() {
+  const c = document.createElement('canvas');
+  c.width = c.height = 1024;
+  c.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:99;opacity:0.025;mix-blend-mode:screen;image-rendering:pixelated;';
+  document.body.appendChild(c);
+  const ctx = c.getContext('2d');
+  const img = ctx.createImageData(1024, 1024);
+  const buf = img.data;
+  function draw() {
+    for (let i = 0, len = buf.length; i < len; i += 4) {
+      const v = Math.random() * 255;
+      buf[i] = buf[i + 1] = buf[i + 2] = v;
+      buf[i + 3] = 255;
+    }
+    ctx.putImageData(img, 0, 0);
+    requestAnimationFrame(draw);
+  }
+  draw();
+})();
+
+/* ── init ── */
+addEventListener('resize', resize);
+resize();
+updateProgress();
+</script>
+</body>
+</html>
